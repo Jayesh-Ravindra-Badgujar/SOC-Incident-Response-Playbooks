@@ -1,44 +1,79 @@
-# Brute Force Login Indicators of Compromise (IOCs)
+# Ransomware Indicators of Compromise (IOCs)
 
 ## Overview
 
-This document lists common Indicators of Compromise (IOCs) associated with brute-force login attacks. These indicators help Security Operations Center (SOC) analysts identify, investigate, and respond to authentication-based attacks before unauthorized access is achieved.
+This document lists common Indicators of Compromise (IOCs) associated with ransomware attacks. These indicators help Security Operations Center (SOC) analysts detect, investigate, contain, and respond to ransomware incidents before they spread across the environment.
 
 ---
 
 # What is an IOC?
 
-An Indicator of Compromise (IOC) is a piece of evidence that indicates an attempted or successful security compromise. For brute-force attacks, IOCs primarily originate from authentication logs, network traffic, and endpoint activity.
-
----
-
-# Authentication Indicators
-
-Common authentication-related indicators include:
-
-- Multiple failed login attempts
-- Account lockout events
-- Repeated authentication failures from the same IP address
-- Login attempts against multiple user accounts
-- Successful login following numerous failed attempts
-- Authentication attempts outside normal business hours
-- Logins from unusual geographic locations
-- Repeated password reset requests
-- Excessive authentication attempts within a short period
+An Indicator of Compromise (IOC) is a piece of evidence that suggests a system or network has been compromised. In ransomware incidents, IOCs are commonly observed through endpoint behavior, file system activity, authentication logs, network traffic, and security monitoring tools.
 
 ---
 
 # Host-Based Indicators
 
-Possible endpoint indicators include:
+Common endpoint indicators include:
 
-- New user sessions immediately after repeated failed logins
-- Unauthorized privilege escalation
-- Unexpected Remote Desktop (RDP) sessions
-- Suspicious SSH sessions
-- Administrative account usage outside normal hours
-- Multiple user profile access attempts
-- Unauthorized account modifications
+- Sudden encryption of multiple files
+- Appearance of ransom notes (e.g., README.txt, DECRYPT_FILES.txt)
+- Unknown or suspicious processes consuming high CPU resources
+- Rapid file renaming or extension changes
+- Unauthorized deletion of Shadow Copies
+- Unexpected system slowdowns
+- Disabled antivirus or security software
+- Unauthorized registry modifications
+- Creation of suspicious scheduled tasks
+- Unexpected Windows services
+
+---
+
+# File-Based Indicators
+
+Common file-related indicators include:
+
+- Files encrypted with unknown extensions
+- Presence of ransom note files
+- Multiple files modified within a short time
+- Encrypted documents, images, and databases
+- Executable files in temporary directories
+- Suspicious DLL files
+- Batch scripts (.bat)
+- PowerShell scripts (.ps1)
+- Visual Basic scripts (.vbs)
+- JavaScript files (.js)
+
+---
+
+# Process Indicators
+
+Possible malicious process behavior includes:
+
+- PowerShell execution with encoded commands
+- Command Prompt launched by Office applications
+- Suspicious parent-child process relationships
+- Execution from AppData or Temp directories
+- High disk read/write activity
+- File encryption processes
+- Unexpected privilege escalation
+- Process injection attempts
+- Unknown background services
+
+---
+
+# Persistence Indicators
+
+Common persistence mechanisms include:
+
+- Registry Run Keys
+- Startup Folder entries
+- Scheduled Tasks
+- Windows Services
+- WMI Event Subscriptions
+- Startup scripts
+- New local administrator accounts
+- Browser persistence extensions
 
 ---
 
@@ -46,14 +81,15 @@ Possible endpoint indicators include:
 
 Possible network-related indicators include:
 
-- High volume of authentication requests
-- Multiple login attempts from a single IP address
-- Login attempts from blacklisted IP addresses
-- Repeated VPN authentication failures
-- SSH connection attempts from external sources
-- RDP connection attempts from unknown systems
-- Password spraying against multiple accounts
-- Authentication requests across multiple servers
+- Connections to Command and Control (C2) servers
+- DNS requests to suspicious domains
+- High-volume outbound network traffic
+- SMB traffic between endpoints
+- Lateral movement attempts
+- Connections over uncommon ports
+- Communication with known malicious IP addresses
+- Remote Desktop Protocol (RDP) activity from unknown hosts
+- Unexpected data uploads (possible exfiltration)
 
 ---
 
@@ -61,16 +97,16 @@ Possible network-related indicators include:
 
 | Event ID | Description |
 |----------|-------------|
+| 4688 | Process Creation |
+| 4689 | Process Termination |
+| 4104 | PowerShell Script Block Logging |
 | 4624 | Successful Logon |
 | 4625 | Failed Logon |
-| 4634 | Logoff |
-| 4648 | Logon Using Explicit Credentials |
 | 4672 | Special Privileges Assigned to New Logon |
-| 4740 | User Account Locked Out |
-| 4768 | Kerberos Authentication Ticket (TGT) Requested |
-| 4769 | Kerberos Service Ticket Requested |
-| 4771 | Kerberos Pre-Authentication Failed |
-| 4776 | NTLM Authentication Attempt |
+| 4698 | Scheduled Task Created |
+| 7045 | New Service Installed |
+| 1102 | Security Audit Log Cleared |
+| 5156 | Windows Filtering Platform Connection Allowed |
 
 ---
 
@@ -78,14 +114,15 @@ Possible network-related indicators include:
 
 Examples include:
 
-- Multiple failed SSH login attempts
-- Invalid username attempts
-- Repeated password authentication failures
-- Root login attempts
-- SSH authentication from unknown IP addresses
-- Frequent authentication failures in `/var/log/auth.log`
-- Successful SSH login after multiple failures
-- Excessive `sudo` authentication failures
+- Unauthorized privilege escalation
+- Unknown cron jobs
+- Suspicious shell scripts
+- Unexpected file encryption
+- Changes to critical configuration files
+- New user account creation
+- Unauthorized SSH access
+- Reverse shell activity
+- Unexpected outbound network connections
 
 ---
 
@@ -95,32 +132,34 @@ Common log sources include:
 
 - Wazuh SIEM
 - Splunk
-- Windows Security Logs
-- Linux Authentication Logs
-- Active Directory Logs
-- VPN Logs
-- Firewall Logs
-- IDS/IPS Alerts
 - Microsoft Defender
-- Endpoint Detection & Response (EDR)
+- CrowdStrike Falcon
+- Windows Event Viewer
+- Sysmon
+- Linux Authentication Logs
+- File Integrity Monitoring (FIM)
+- Firewall Logs
+- DNS Logs
+- Proxy Logs
+- EDR Alerts
 
 ---
 
 # Recommended Analyst Actions
 
-When brute-force IOCs are identified:
+When ransomware IOCs are identified:
 
 1. Validate the security alert.
-2. Identify the targeted user account(s).
-3. Determine the source IP address.
-4. Review authentication logs.
-5. Check for successful logins following failed attempts.
-6. Block malicious IP addresses if required.
-7. Lock or disable compromised accounts.
-8. Force password reset for affected users.
-9. Verify Multi-Factor Authentication (MFA) status.
-10. Escalate if account compromise is confirmed.
-11. Document findings and preserve relevant logs.
+2. Identify affected systems and users.
+3. Immediately isolate infected endpoints.
+4. Preserve forensic evidence before making changes.
+5. Review running processes and active network connections.
+6. Analyze endpoint and SIEM logs.
+7. Block malicious IP addresses and domains.
+8. Disable compromised accounts if necessary.
+9. Verify backup availability.
+10. Escalate immediately if encryption is confirmed.
+11. Document findings and preserve Indicators of Compromise (IOCs).
 
 ---
 
@@ -128,9 +167,11 @@ When brute-force IOCs are identified:
 
 | Technique | ID |
 |------------|------------|
-| Brute Force | T1110 |
-| Password Guessing | T1110.001 |
-| Password Cracking | T1110.002 |
-| Password Spraying | T1110.003 |
-| Credential Stuffing | T1110.004 |
+| Data Encrypted for Impact | T1486 |
+| Command and Scripting Interpreter | T1059 |
+| PowerShell | T1059.001 |
+| Ingress Tool Transfer | T1105 |
+| Registry Run Keys / Startup Folder | T1547 |
+| Scheduled Task/Job | T1053 |
+| Remote Services | T1021 |
 | Valid Accounts | T1078 |
