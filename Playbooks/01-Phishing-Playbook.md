@@ -231,7 +231,3 @@ After the incident:
 
 - NIST SP 800-61 Revision 2
 - MITRE ATT&CK Framework
-- OWASP Phishing Prevention Guidelines
-- Microsoft Security Documentation
-- Wazuh Documentation
-- Splunk Documentation
